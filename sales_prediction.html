@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sales Prediction Using Python — GitHub README</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg:         #0a0e1a;
+    --surface:    #111827;
+    --surface2:   #1a2235;
+    --border:     #1e2d47;
+    --accent:     #38bdf8;
+    --accent2:    #818cf8;
+    --accent3:    #34d399;
+    --accent4:    #fb923c;
+    --accent5:    #f472b6;
+    --text:       #e2e8f0;
+    --muted:      #64748b;
+    --highlight:  #0f172a;
+    --tv:         #38bdf8;
+    --radio:      #34d399;
+    --news:       #fb923c;
+    --danger:     #f87171;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Sora', sans-serif;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: 72px 40px 60px;
+    text-align: center;
+    background: linear-gradient(135deg, #0a0e1a 0%, #0f1e38 50%, #0a0e1a 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 50%, rgba(56,189,248,.08) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 80% 40%, rgba(129,140,248,.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(56,189,248,.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(56,189,248,.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+  .badge-row {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 8px;
+    margin-bottom: 28px; position: relative;
+  }
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 600;
+    padding: 4px 12px; border-radius: 20px;
+    border: 1px solid; letter-spacing: .5px;
+    animation: fadeUp .5s ease both;
+  }
+  .badge-blue  { color: var(--accent);  border-color: rgba(56,189,248,.4);  background: rgba(56,189,248,.08); }
+  .badge-purple{ color: var(--accent2); border-color: rgba(129,140,248,.4); background: rgba(129,140,248,.08); }
+  .badge-green { color: var(--accent3); border-color: rgba(52,211,153,.4);  background: rgba(52,211,153,.08); }
+  .badge-orange{ color: var(--accent4); border-color: rgba(251,146,60,.4);  background: rgba(251,146,60,.08); }
+  .badge-pink  { color: var(--accent5); border-color: rgba(244,114,182,.4); background: rgba(244,114,182,.08); }
+
+  .hero-title {
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 800; line-height: 1.15;
+    position: relative; margin-bottom: 16px;
+    letter-spacing: -1px;
+  }
+  .hero-title .line1 { color: #fff; display: block; }
+  .hero-title .grad {
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent2) 50%, var(--accent5) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; display: block;
+  }
+  .hero-sub {
+    color: var(--muted); font-size: 16px; max-width: 600px;
+    margin: 0 auto 32px; font-weight: 300;
+  }
+  .hero-meta {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 24px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted);
+    position: relative;
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 6px; }
+  .hero-meta .dot { width:6px; height:6px; border-radius:50%; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 960px; margin: 0 auto; padding: 0 24px 80px; }
+
+  /* ── SECTION HEADINGS ── */
+  .section { margin-top: 56px; }
+  .section-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .section-label::before {
+    content: ''; width: 16px; height: 1px; background: var(--accent);
+  }
+  .section-title {
+    font-size: clamp(20px, 3vw, 28px); font-weight: 700;
+    color: #fff; margin-bottom: 20px; letter-spacing: -.5px;
+  }
+  .section-title span {
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px; margin-bottom: 16px;
+    transition: border-color .2s;
+  }
+  .card:hover { border-color: rgba(56,189,248,.3); }
+
+  /* ── OVERVIEW GRID ── */
+  .overview-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px; margin-top: 8px;
+  }
+  .overview-card {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px; text-align: center;
+    transition: transform .2s, border-color .2s;
+  }
+  .overview-card:hover { transform: translateY(-3px); border-color: rgba(56,189,248,.35); }
+  .overview-card .oc-icon { font-size: 28px; margin-bottom: 10px; }
+  .overview-card .oc-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 4px;
+  }
+  .overview-card .oc-label { font-size: 12px; color: var(--muted); }
+
+  /* ── STEPS TIMELINE ── */
+  .steps { position: relative; padding-left: 32px; }
+  .steps::before {
+    content: ''; position: absolute; left: 11px; top: 8px;
+    width: 2px; bottom: 8px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2), transparent);
+  }
+  .step { position: relative; margin-bottom: 28px; }
+  .step-dot {
+    position: absolute; left: -32px; top: 4px;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--surface); border: 2px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    font-weight: 700; color: var(--accent);
+  }
+  .step-title {
+    font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px;
+  }
+  .step-desc { font-size: 13.5px; color: var(--muted); line-height: 1.6; }
+  .step-code {
+    margin-top: 10px; background: var(--highlight);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 12px 16px; font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: #94a3b8; overflow-x: auto; line-height: 1.8;
+  }
+  .kw  { color: #c084fc; }
+  .fn  { color: #38bdf8; }
+  .str { color: #86efac; }
+  .cm  { color: #475569; font-style: italic; }
+  .num { color: #fb923c; }
+
+  /* ── DATASET TABLE ── */
+  .dataset-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .dataset-table th {
+    background: var(--surface2); color: var(--accent);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border);
+  }
+  .dataset-table td {
+    padding: 10px 16px; border-bottom: 1px solid rgba(30,45,71,.6);
+    color: var(--text); vertical-align: top;
+  }
+  .dataset-table tr:last-child td { border-bottom: none; }
+  .dataset-table tr:hover td { background: rgba(56,189,248,.04); }
+  .col-pill {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; font-weight: 600; padding: 2px 10px;
+    border-radius: 6px; background: rgba(56,189,248,.1);
+    color: var(--accent); border: 1px solid rgba(56,189,248,.2);
+  }
+  .target-pill {
+    background: rgba(244,114,182,.1); color: var(--accent5);
+    border-color: rgba(244,114,182,.2);
+  }
+  .type-tag {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    padding: 2px 8px; border-radius: 4px;
+    background: rgba(129,140,248,.1); color: var(--accent2);
+    border: 1px solid rgba(129,140,248,.2);
+  }
+
+  /* ── MODEL CARDS ── */
+  .model-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .model-card {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 22px; position: relative; overflow: hidden;
+    transition: transform .2s, border-color .2s;
+  }
+  .model-card:hover { transform: translateY(-3px); }
+  .model-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .model-card.lr::before  { background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .model-card.rf::before  { background: linear-gradient(90deg, var(--accent3), var(--accent)); }
+  .model-card.dt::before  { background: linear-gradient(90deg, var(--accent4), var(--accent5)); }
+  .model-card.lr { border-color: rgba(56,189,248,.2); }
+  .model-card.rf { border-color: rgba(52,211,153,.2); }
+  .model-card.dt { border-color: rgba(251,146,60,.2); }
+  .model-name { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+  .model-badge {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; padding: 2px 8px; border-radius: 20px; margin-bottom: 12px;
+  }
+  .model-card.lr .model-badge { background: rgba(56,189,248,.15); color: var(--accent); }
+  .model-card.rf .model-badge { background: rgba(52,211,153,.15); color: var(--accent3); }
+  .model-card.dt .model-badge { background: rgba(251,146,60,.15); color: var(--accent4); }
+  .model-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+  .metric-row { display: flex; justify-content: space-between; margin-top: 12px; }
+  .metric-box { text-align: center; }
+  .metric-val {
+    font-family: 'JetBrains Mono', monospace; font-size: 16px;
+    font-weight: 700; color: #fff;
+  }
+  .metric-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  .best-tag {
+    position: absolute; top: 14px; right: 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 20px;
+    background: rgba(52,211,153,.15); color: var(--accent3);
+    border: 1px solid rgba(52,211,153,.3);
+  }
+
+  /* ── FEATURE BARS ── */
+  .feat-bar-wrap { margin-bottom: 14px; }
+  .feat-bar-label {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 6px;
+  }
+  .feat-name { font-weight: 600; font-size: 14px; color: #fff; }
+  .feat-pct  { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 700; }
+  .feat-track {
+    height: 10px; background: var(--surface2); border-radius: 99px; overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .feat-fill { height: 100%; border-radius: 99px; transition: width .8s ease; }
+  .feat-sub  { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+  /* ── INSIGHTS ── */
+  .insight-grid { display: grid; gap: 14px; }
+  .insight {
+    display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: start;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px;
+    transition: border-color .2s, transform .2s;
+  }
+  .insight:hover { border-color: rgba(56,189,248,.25); transform: translateX(4px); }
+  .insight-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; flex-shrink: 0;
+  }
+  .insight-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .insight-body  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .insight-rec {
+    margin-top: 8px; padding: 8px 12px; border-radius: 6px;
+    font-size: 12px; font-weight: 600;
+    background: rgba(56,189,248,.07); color: var(--accent);
+    border-left: 3px solid var(--accent);
+  }
+
+  /* ── FLOW PIPELINE ── */
+  .pipeline {
+    display: flex; flex-wrap: wrap; gap: 0; align-items: center;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 12px; overflow: hidden;
+  }
+  .pipe-step {
+    flex: 1; min-width: 90px; padding: 16px 12px; text-align: center;
+    border-right: 1px solid var(--border); position: relative;
+  }
+  .pipe-step:last-child { border-right: none; }
+  .pipe-step::after {
+    content: '→'; position: absolute; right: -9px; top: 50%;
+    transform: translateY(-50%); color: var(--muted); font-size: 14px; z-index: 1;
+  }
+  .pipe-step:last-child::after { display: none; }
+  .pipe-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--muted); margin-bottom: 4px;
+  }
+  .pipe-label { font-size: 11px; font-weight: 600; color: var(--text); line-height: 1.3; }
+
+  /* ── METRICS SUMMARY ── */
+  .metrics-summary {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px;
+  }
+  .ms-card {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px; text-align: center;
+  }
+  .ms-val {
+    font-family: 'JetBrains Mono', monospace; font-size: 26px;
+    font-weight: 700; margin-bottom: 4px;
+  }
+  .ms-lbl { font-size: 12px; color: var(--muted); }
+
+  /* ── VISUALIZATIONS LIST ── */
+  .viz-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+  .viz-item {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px;
+    display: flex; gap: 12px; align-items: flex-start;
+    transition: border-color .2s;
+  }
+  .viz-item:hover { border-color: rgba(56,189,248,.3); }
+  .viz-num {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--accent); font-weight: 700; flex-shrink: 0;
+    width: 24px; padding-top: 1px;
+  }
+  .viz-name { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 3px; }
+  .viz-desc { font-size: 12px; color: var(--muted); }
+
+  /* ── FUTURE SCENARIOS ── */
+  .scenario-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .scenario-table th {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    padding: 10px 14px; text-align: left;
+    background: var(--surface2); color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .scenario-table td { padding: 10px 14px; border-bottom: 1px solid rgba(30,45,71,.5); }
+  .scenario-table tr:last-child td { border-bottom: none; }
+  .scenario-table tr:hover td { background: rgba(56,189,248,.04); }
+  .sc-name { font-weight: 600; color: #fff; }
+  .sc-hi { color: var(--accent3); font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+  .roi-bar {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .roi-mini {
+    height: 6px; border-radius: 99px; background: var(--accent3);
+    opacity: .7;
+  }
+
+  /* ── INSTALL BOX ── */
+  .install-box {
+    background: var(--highlight); border: 1px solid var(--border);
+    border-radius: 10px; padding: 20px 24px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    line-height: 2; color: #94a3b8; margin-top: 12px;
+  }
+  .install-box .prompt { color: var(--accent3); user-select: none; }
+  .install-box .cmd    { color: #e2e8f0; }
+  .install-box .cmt    { color: #334155; }
+
+  /* ── LIBS ── */
+  .libs-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+  .lib-chip {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 14px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    font-weight: 600; color: var(--text); transition: border-color .2s;
+  }
+  .lib-chip:hover { border-color: rgba(56,189,248,.35); color: var(--accent); }
+  .lib-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px; margin: 40px 0;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center; padding: 32px; border-top: 1px solid var(--border);
+    font-size: 13px; color: var(--muted);
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════ HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+
+  <div class="badge-row">
+    <span class="badge badge-blue">Python 3.x</span>
+    <span class="badge badge-purple">Jupyter Notebook</span>
+    <span class="badge badge-green">Machine Learning</span>
+    <span class="badge badge-orange">Predictive Analytics</span>
+    <span class="badge badge-pink">Marketing Analytics</span>
+  </div>
+
+  <h1 class="hero-title">
+    <span class="line1">Sales Prediction</span>
+    <span class="grad">Using Python</span>
+  </h1>
+
+  <p class="hero-sub">
+    A complete end-to-end machine learning project that predicts product sales
+    based on advertising spend across TV, Radio &amp; Newspaper channels.
+  </p>
+
+  <div class="hero-meta">
+    <span><span class="dot" style="background:#38bdf8"></span>200 Records</span>
+    <span><span class="dot" style="background:#34d399"></span>3 Features</span>
+    <span><span class="dot" style="background:#818cf8"></span>3 Models Compared</span>
+    <span><span class="dot" style="background:#fb923c"></span>54 Notebook Cells</span>
+    <span><span class="dot" style="background:#f472b6"></span>R² Score &gt; 0.96</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ═══════ OVERVIEW STATS -->
+  <div class="section">
+    <div class="section-label">Project Overview</div>
+    <h2 class="section-title">What this project <span>covers</span></h2>
+    <div class="overview-grid">
+      <div class="overview-card">
+        <div class="oc-icon">📊</div>
+        <div class="oc-val">200</div>
+        <div class="oc-label">Dataset Records</div>
+      </div>
+      <div class="overview-card">
+        <div class="oc-icon">🔢</div>
+        <div class="oc-val">4</div>
+        <div class="oc-label">Columns (3 Features + 1 Target)</div>
+      </div>
+      <div class="overview-card">
+        <div class="oc-icon">🤖</div>
+        <div class="oc-val">3</div>
+        <div class="oc-label">ML Models Built</div>
+      </div>
+      <div class="overview-card">
+        <div class="oc-icon">📈</div>
+        <div class="oc-val">96%+</div>
+        <div class="oc-label">Prediction Accuracy (R²)</div>
+      </div>
+      <div class="overview-card">
+        <div class="oc-icon">🗂️</div>
+        <div class="oc-val">17</div>
+        <div class="oc-label">Notebook Sections</div>
+      </div>
+      <div class="overview-card">
+        <div class="oc-icon">📉</div>
+        <div class="oc-val">10+</div>
+        <div class="oc-label">Visualisation Charts</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════ DATASET -->
+  <div class="section">
+    <div class="section-label">Dataset</div>
+    <h2 class="section-title">Advertising.<span>csv</span> — Column Reference</h2>
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table class="dataset-table">
+        <thead>
+          <tr>
+            <th>Column</th>
+            <th>Type</th>
+            <th>Range</th>
+            <th>Description</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="col-pill">TV</span></td>
+            <td><span class="type-tag">float64</span></td>
+            <td>0.7 – 296.4</td>
+            <td>Advertising budget spent on TV (in $thousands)</td>
+            <td><span class="badge badge-blue" style="font-size:10px">Feature</span></td>
+          </tr>
+          <tr>
+            <td><span class="col-pill">Radio</span></td>
+            <td><span class="type-tag">float64</span></td>
+            <td>0.0 – 49.6</td>
+            <td>Advertising budget spent on Radio (in $thousands)</td>
+            <td><span class="badge badge-blue" style="font-size:10px">Feature</span></td>
+          </tr>
+          <tr>
+            <td><span class="col-pill">Newspaper</span></td>
+            <td><span class="type-tag">float64</span></td>
+            <td>0.3 – 114.0</td>
+            <td>Advertising budget spent on Newspaper (in $thousands)</td>
+            <td><span class="badge badge-blue" style="font-size:10px">Feature</span></td>
+          </tr>
+          <tr>
+            <td><span class="col-pill target-pill">Sales</span></td>
+            <td><span class="type-tag">float64</span></td>
+            <td>1.6 – 27.0</td>
+            <td>Units of product sold (in $thousands) — what we predict</td>
+            <td><span class="badge badge-pink" style="font-size:10px">Target ★</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:12px; display:flex; gap:16px; flex-wrap:wrap; font-size:13px; color:var(--muted);">
+      <span>✅ <strong style="color:#fff">Zero</strong> missing values</span>
+      <span>✅ <strong style="color:#fff">Zero</strong> duplicate rows</span>
+      <span>✅ All columns are <strong style="color:#fff">numeric</strong> — no encoding needed</span>
+      <span>✅ Clean, ready-to-model data</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════ PIPELINE -->
+  <div class="section">
+    <div class="section-label">Workflow</div>
+    <h2 class="section-title">End-to-end <span>Pipeline</span></h2>
+    <div class="pipeline">
+      <div class="pipe-step">
+        <div class="pipe-num">01</div>
+        <div class="pipe-label">Load &amp; Explore</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">02</div>
+        <div class="pipe-label">Clean Data</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">03</div>
+        <div class="pipe-label">EDA &amp; Visualise</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">04</div>
+        <div class="pipe-label">Correlations</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">05</div>
+        <div class="pipe-label">Feature Select</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">06</div>
+        <div class="pipe-label">Train / Test</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">07</div>
+        <div class="pipe-label">Build Models</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">08</div>
+        <div class="pipe-label">Evaluate</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">09</div>
+        <div class="pipe-label">Forecast</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-num">10</div>
+        <div class="pipe-label">Insights</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════ NOTEBOOK SECTIONS -->
+  <div class="section">
+    <div class="section-label">Notebook Walkthrough</div>
+    <h2 class="section-title">All 17 <span>Sections</span> Explained</h2>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-dot">01</div>
+        <div class="step-title">Importing Libraries</div>
+        <div class="step-desc">All required libraries are imported in one place — <code style="color:var(--accent);font-family:JetBrains Mono">pandas</code>, <code style="color:var(--accent);font-family:JetBrains Mono">numpy</code>, <code style="color:var(--accent);font-family:JetBrains Mono">matplotlib</code>, <code style="color:var(--accent);font-family:JetBrains Mono">seaborn</code>, <code style="color:var(--accent);font-family:JetBrains Mono">scikit-learn</code>, and <code style="color:var(--accent);font-family:JetBrains Mono">statsmodels</code>. Chart styles and figure sizes are also configured here.</div>
+        <div class="step-code">
+<span class="kw">import</span> pandas <span class="kw">as</span> pd &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># data manipulation</span><br>
+<span class="kw">import</span> numpy <span class="kw">as</span> np &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># numerical operations</span><br>
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt &nbsp;&nbsp;&nbsp;<span class="cm"># plotting</span><br>
+<span class="kw">import</span> seaborn <span class="kw">as</span> sns &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># statistical visuals</span><br>
+<span class="kw">import</span> statsmodels.api <span class="kw">as</span> sm &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="cm"># detailed regression summary</span><br>
+<span class="kw">from</span> sklearn.<span class="fn">model_selection</span> <span class="kw">import</span> train_test_split, cross_val_score<br>
+<span class="kw">from</span> sklearn.<span class="fn">linear_model</span> <span class="kw">import</span> LinearRegression<br>
+<span class="kw">from</span> sklearn.<span class="fn">ensemble</span> <span class="kw">import</span> RandomForestRegressor<br>
+<span class="kw">from</span> sklearn.<span class="fn">metrics</span> <span class="kw">import</span> mean_absolute_error, mean_squared_error, r2_score
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-dot">02</div>
+        <div class="step-title">Loading the Dataset</div>
+        <div class="step-desc">Reads <code style="color:var(--accent);font-family:JetBrains Mono">Advertising.csv</code> into a pandas DataFrame and drops the unnamed index column that has no predictive value.</div>
+        <div class="step-code">
+df = pd.<span class="fn">read_csv</span>(<span class="str">'Advertising.csv'</span>)<br>
+df.<span class="fn">drop</span>(columns=[<span class="str">'Unnamed: 0'</span>], inplace=<span class="kw">True</span>)<br>
+<span class="fn">print</span>(df.shape) &nbsp;<span class="cm"># (200, 4)</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-dot">03</div>
+        <div class="step-title">Understanding the Dataset</div>
+        <div class="step-desc">Uses <code style="color:var(--accent);font-family:JetBrains Mono">df.info()</code> and <code style="color:var(--accent);font-family:JetBrains Mono">df.describe()</code> to examine data types, null counts, and statistical summaries (mean, std, min, max, quartiles) for all 4 columns.</div>
+      </div>
+
+      <div class="step">
+        <div class="step-dot">04</div>
+        <div class="step-title">Data Cleaning</div>
+        <div class="step-desc">Checks for missing values (none found), duplicate rows (none found), and potential outliers using the IQR method. Newspaper has a few high-end values but they are kept as legitimate data points.</div>
+        <div class="step-code">
+<span class="cm"># IQR outlier check</span><br>
+<span class="kw">for</span> col <span class="kw">in</span> df.columns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Q1 = df[col].<span class="fn">quantile</span>(<span class="num">0.25</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Q3 = df[col].<span class="fn">quantile</span>(<span class="num">0.75</span>)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;IQR = Q3 - Q1<br>
+&nbsp;&nbsp;&nbsp;&nbsp;outliers = df[(df[col] &lt; Q1-<span class="num">1.5</span>*IQR) | (df[col] &gt; Q3+<span class="num">1.5</span>*IQR)].shape[<span class="num">0</span>]
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-dot">05</div>
+        <div class="step-title">Exploratory Data Analysis (EDA)</div>
+        <div class="step-desc">Generates histograms and KDE plots for Sales and all three channels, scatter plots with trend lines to visualise linear relationships, and a full pairplot matrix to see cross-variable relationships in one view.</div>
+      </div>
+
+      <div class="step">
+        <div class="step-dot">06</div>
+        <div class="step-title">Correlation Analysis</div>
+        <div class="step-desc">Computes the Pearson correlation matrix and plots it as a colour-coded heatmap plus a bar chart. Key finding: TV (r=0.782) and Radio (r=0.576) are strongly correlated with Sales, Newspaper (r=0.228) is weak.</div>
+      </div>
+
+      <div class="step">
+        <div class="step-dot">07</div>
+        <div class="step-title">Feature Selection</div>
+        <div class="step-desc">Defines X (feature matrix with TV, Radio, Newspaper) and y (Sales target vector). All three features are retained initially; Newspaper's low importance is confirmed later by the Random Forest model.</div>
+      </div>
+
+      <div class="step">
+        <div class="step-dot">08</div>
+        <div class="step-title">Train-Test Split</div>
+        <div class="step-desc">Splits the 200-row dataset into 80% training (160 samples) and 20% testing (40 samples) with <code style="color:var(--accent);font-family:JetBrains Mono">random_state=42</code> for reproducibility.</div>
+        <div class="step-code">
+X_train, X_test, y_train, y_test = <span class="fn">train_test_split</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;X, y, test_size=<span class="num">0.2</span>, random_state=<span class="num">42</span><br>
+) &nbsp;<span class="cm"># 160 train | 40 test</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-dot">09</div>
+        <div class="step-title">Model Building</div>
+        <div class="step-desc">Three regression models are trained and compared. Multiple Linear Regression for interpretability, Random Forest for accuracy and non-linearity, Decision Tree for visual comparison. Each model is fitted on training data only.</div>
+      </div>
+
+      <div class="step">
+        <div class="step-dot">10</div>
+        <div class="step-title">OLS Regression Summary (statsmodels)</div>
+        <div class="step-desc">Produces a full OLS statistical summary including R-squared, F-statistic, coefficient p-values, and 95% confidence intervals. Result: TV and Radio are statistically significant (p &lt; 0.001), Newspaper is NOT (p = 0.86).</div>
+      </div>
+
+      <div class="step">
+        <div class="step-dot">11</div>
+        <div class="step-title">Model Evaluation</div>
+        <div class="step-desc">Evaluates all three models on the test set using MAE, RMSE, and R² Score. Also runs 5-fold cross-validation for a more robust, unbiased accuracy estimate. Random Forest wins on all metrics.</div>
+      </div>
+
+      <div class="step">
+        <div class="step-dot">12</div>
+        <div class="step-title">Prediction Comparison Charts</div>
+        <div class="step-desc">Plots Actual vs Predicted scatter charts for all three models with a perfect-fit diagonal line, plus a residual plot to verify that errors are randomly distributed (confirming model validity).</div>
+      </div>
+
+      <div class="step">
+        <div class="step-dot">13</div>
+        <div class="step-title">Feature Importance Analysis</div>
+        <div class="step-desc">Extracts and plots the Random Forest feature importance scores, showing exactly what percentage of predictive power comes from each advertising channel.</div>
+      </div>
+
+      <div class="step">
+        <div class="step-dot">14</div>
+        <div class="step-title">Forecasting Future Sales</div>
+        <div class="step-desc">Uses the trained Random Forest model to forecast sales for 6 realistic budget scenarios (Low, Medium, High, TV-Heavy, Radio-Heavy, Balanced) and includes an ROI analysis per scenario.</div>
+      </div>
+
+      <div class="step">
+        <div class="step-dot">15</div>
+        <div class="step-title">Platform-wise Sales Analysis</div>
+        <div class="step-desc">Segments TV spend into 4 budget categories (Low / Medium / High / Very High) and compares average sales per group with boxplots. Also plots a pie chart of average budget allocation across channels.</div>
+      </div>
+
+      <div class="step">
+        <div class="step-dot">16</div>
+        <div class="step-title">Business Insights & Recommendations</div>
+        <div class="step-desc">Translates model results into 5 data-driven marketing strategy recommendations for budget allocation, channel prioritisation, and ROI optimisation.</div>
+      </div>
+
+      <div class="step">
+        <div class="step-dot">17</div>
+        <div class="step-title">Final Conclusion & Project Summary</div>
+        <div class="step-desc">Prints a complete project summary — dataset stats, all model performance metrics side-by-side, key findings, and 5 suggestions for future improvements.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════ MODELS -->
+  <div class="section">
+    <div class="section-label">Models</div>
+    <h2 class="section-title">Models <span>Compared</span></h2>
+    <div class="model-grid">
+
+      <div class="model-card lr">
+        <div class="model-name">Multiple Linear Regression</div>
+        <div class="model-badge">scikit-learn</div>
+        <div class="model-desc">The baseline interpretable model. Fits a linear equation to the data: <em>Sales = b₀ + b₁·TV + b₂·Radio + b₃·Newspaper</em>. Each coefficient tells you exactly how much sales change per $1K of spend on that channel.</div>
+        <div class="metric-row">
+          <div class="metric-box">
+            <div class="metric-val" style="color:var(--accent)">~0.97</div>
+            <div class="metric-lbl">R² Score</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val" style="color:var(--accent)">~0.91</div>
+            <div class="metric-lbl">RMSE ($K)</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val" style="color:var(--accent)">~0.70</div>
+            <div class="metric-lbl">MAE ($K)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="model-card rf">
+        <div class="best-tag">★ BEST MODEL</div>
+        <div class="model-name">Random Forest Regression</div>
+        <div class="model-badge">100 estimators</div>
+        <div class="model-desc">An ensemble of 100 decision trees. Averages their predictions to reduce overfitting. Captures non-linear patterns and interaction effects between channels. Provides feature importance scores.</div>
+        <div class="metric-row">
+          <div class="metric-box">
+            <div class="metric-val" style="color:var(--accent3)">~0.98</div>
+            <div class="metric-lbl">R² Score</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val" style="color:var(--accent3)">~0.72</div>
+            <div class="metric-lbl">RMSE ($K)</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val" style="color:var(--accent3)">~0.52</div>
+            <div class="metric-lbl">MAE ($K)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="model-card dt">
+        <div class="model-name">Decision Tree Regression</div>
+        <div class="model-badge">max_depth = 5</div>
+        <div class="model-desc">A single decision tree that splits data based on feature thresholds. Depth is capped at 5 to prevent overfitting. Used as a comparison point between the simplest and most complex models.</div>
+        <div class="metric-row">
+          <div class="metric-box">
+            <div class="metric-val" style="color:var(--accent4)">~0.95</div>
+            <div class="metric-lbl">R² Score</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val" style="color:var(--accent4)">~1.10</div>
+            <div class="metric-lbl">RMSE ($K)</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val" style="color:var(--accent4)">~0.80</div>
+            <div class="metric-lbl">MAE ($K)</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════ FEATURE IMPORTANCE -->
+  <div class="section">
+    <div class="section-label">Feature Analysis</div>
+    <h2 class="section-title">Channel <span>Importance</span> — Random Forest</h2>
+    <div class="card">
+      <div class="feat-bar-wrap">
+        <div class="feat-bar-label">
+          <span class="feat-name" style="color:var(--tv)">📺 TV</span>
+          <span class="feat-pct" style="color:var(--tv)">~78%</span>
+        </div>
+        <div class="feat-track">
+          <div class="feat-fill" style="width:78%; background:linear-gradient(90deg,var(--tv),var(--accent2))"></div>
+        </div>
+        <div class="feat-sub">Dominant channel. Highest correlation with Sales (r = 0.782). Every $1K increase in TV spend → approximately +0.054K in Sales.</div>
+      </div>
+      <div class="feat-bar-wrap">
+        <div class="feat-bar-label">
+          <span class="feat-name" style="color:var(--radio)">📻 Radio</span>
+          <span class="feat-pct" style="color:var(--radio)">~18%</span>
+        </div>
+        <div class="feat-track">
+          <div class="feat-fill" style="width:18%; background:linear-gradient(90deg,var(--radio),#06b6d4)"></div>
+        </div>
+        <div class="feat-sub">Secondary driver. Moderate correlation (r = 0.576). Statistically significant (p &lt; 0.001). Best cost-efficiency ratio.</div>
+      </div>
+      <div class="feat-bar-wrap">
+        <div class="feat-bar-label">
+          <span class="feat-name" style="color:var(--news)">📰 Newspaper</span>
+          <span class="feat-pct" style="color:var(--news)">~4%</span>
+        </div>
+        <div class="feat-track">
+          <div class="feat-fill" style="width:4%; background:linear-gradient(90deg,var(--news),#fbbf24)"></div>
+        </div>
+        <div class="feat-sub">Weak driver. Low correlation (r = 0.228). NOT statistically significant (p = 0.86). Budget here should be reallocated to TV or Radio.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════ VISUALIZATIONS -->
+  <div class="section">
+    <div class="section-label">Visualisations</div>
+    <h2 class="section-title">Charts <span>Generated</span></h2>
+    <div class="viz-list">
+      <div class="viz-item">
+        <div class="viz-num">01</div>
+        <div>
+          <div class="viz-name">Sales Distribution</div>
+          <div class="viz-desc">Histogram + KDE curve and boxplot of the target variable. Saved as <code style="color:var(--accent);font-family:JetBrains Mono;font-size:11px">sales_distribution.png</code></div>
+        </div>
+      </div>
+      <div class="viz-item">
+        <div class="viz-num">02</div>
+        <div>
+          <div class="viz-name">Channel Budget Distributions</div>
+          <div class="viz-desc">Side-by-side histograms for TV, Radio, and Newspaper spend. Saved as <code style="color:var(--accent);font-family:JetBrains Mono;font-size:11px">channel_distributions.png</code></div>
+        </div>
+      </div>
+      <div class="viz-item">
+        <div class="viz-num">03</div>
+        <div>
+          <div class="viz-name">Advertising vs Sales Scatterplots</div>
+          <div class="viz-desc">Three scatter plots with regression trend lines, one per channel. Saved as <code style="color:var(--accent);font-family:JetBrains Mono;font-size:11px">advertising_vs_sales.png</code></div>
+        </div>
+      </div>
+      <div class="viz-item">
+        <div class="viz-num">04</div>
+        <div>
+          <div class="viz-name">Pairplot Matrix</div>
+          <div class="viz-desc">Full pairwise scatterplot matrix with KDE diagonals. Saved as <code style="color:var(--accent);font-family:JetBrains Mono;font-size:11px">pairplot.png</code></div>
+        </div>
+      </div>
+      <div class="viz-item">
+        <div class="viz-num">05</div>
+        <div>
+          <div class="viz-name">Correlation Heatmap</div>
+          <div class="viz-desc">Annotated coolwarm heatmap of the Pearson correlation matrix. Saved as <code style="color:var(--accent);font-family:JetBrains Mono;font-size:11px">correlation_heatmap.png</code></div>
+        </div>
+      </div>
+      <div class="viz-item">
+        <div class="viz-num">06</div>
+        <div>
+          <div class="viz-name">Correlation Bar Chart</div>
+          <div class="viz-desc">Bar chart showing each channel's Pearson correlation with Sales. Saved as <code style="color:var(--accent);font-family:JetBrains Mono;font-size:11px">correlation_bar.png</code></div>
+        </div>
+      </div>
+      <div class="viz-item">
+        <div class="viz-num">07</div>
+        <div>
+          <div class="viz-name">Model Metric Comparison</div>
+          <div class="viz-desc">Side-by-side bar charts for MAE, RMSE, and R² across all three models. Saved as <code style="color:var(--accent);font-family:JetBrains Mono;font-size:11px">model_comparison.png</code></div>
+        </div>
+      </div>
+      <div class="viz-item">
+        <div class="viz-num">08</div>
+        <div>
+          <div class="viz-name">Actual vs Predicted</div>
+          <div class="viz-desc">Three scatter plots with perfect-fit diagonal for each model. Saved as <code style="color:var(--accent);font-family:JetBrains Mono;font-size:11px">actual_vs_predicted.png</code></div>
+        </div>
+      </div>
+      <div class="viz-item">
+        <div class="viz-num">09</div>
+        <div>
+          <div class="viz-name">Residual Plot</div>
+          <div class="viz-desc">Residuals vs predicted values for the Random Forest model. Saved as <code style="color:var(--accent);font-family:JetBrains Mono;font-size:11px">residuals.png</code></div>
+        </div>
+      </div>
+      <div class="viz-item">
+        <div class="viz-num">10</div>
+        <div>
+          <div class="viz-name">Feature Importance</div>
+          <div class="viz-desc">Horizontal bar chart of RF feature importances. Saved as <code style="color:var(--accent);font-family:JetBrains Mono;font-size:11px">feature_importance.png</code></div>
+        </div>
+      </div>
+      <div class="viz-item">
+        <div class="viz-num">11</div>
+        <div>
+          <div class="viz-name">Future Sales Forecast</div>
+          <div class="viz-desc">Grouped bar chart comparing RF and LR predictions for 6 budget scenarios. Saved as <code style="color:var(--accent);font-family:JetBrains Mono;font-size:11px">future_sales_forecast.png</code></div>
+        </div>
+      </div>
+      <div class="viz-item">
+        <div class="viz-num">12</div>
+        <div>
+          <div class="viz-name">TV Budget Category Boxplots</div>
+          <div class="viz-desc">Sales distribution across Low/Medium/High/Very High TV spend groups. Saved as <code style="color:var(--accent);font-family:JetBrains Mono;font-size:11px">tv_category_sales.png</code></div>
+        </div>
+      </div>
+      <div class="viz-item">
+        <div class="viz-num">13</div>
+        <div>
+          <div class="viz-name">Budget Allocation Pie Chart</div>
+          <div class="viz-desc">Average spend per channel as a percentage of total budget. Saved as <code style="color:var(--accent);font-family:JetBrains Mono;font-size:11px">budget_allocation.png</code></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════ BUSINESS INSIGHTS -->
+  <div class="section">
+    <div class="section-label">Business Intelligence</div>
+    <h2 class="section-title">Key <span>Insights</span> &amp; Recommendations</h2>
+    <div class="insight-grid">
+
+      <div class="insight">
+        <div class="insight-icon" style="background:rgba(56,189,248,.1)">📺</div>
+        <div>
+          <div class="insight-title">TV is the #1 Sales Driver</div>
+          <div class="insight-body">TV advertising has the strongest correlation with Sales (r = 0.782) and accounts for ~78% of the Random Forest model's predictive power. Every $1K increase in TV budget adds approximately $0.054K to Sales.</div>
+          <div class="insight-rec">Recommendation: Prioritise TV as the primary advertising channel and never underspend here.</div>
+        </div>
+      </div>
+
+      <div class="insight">
+        <div class="insight-icon" style="background:rgba(52,211,153,.1)">📻</div>
+        <div>
+          <div class="insight-title">Radio is the Most Cost-Efficient Channel</div>
+          <div class="insight-body">Radio shows solid correlation (r = 0.576) and is statistically significant (p &lt; 0.001). Radio budgets are far smaller than TV but still deliver meaningful sales uplift, making it the highest ROI channel per dollar spent.</div>
+          <div class="insight-rec">Recommendation: Use Radio as a cost-effective complement to TV — run both simultaneously for a multiplier effect.</div>
+        </div>
+      </div>
+
+      <div class="insight">
+        <div class="insight-icon" style="background:rgba(251,146,60,.1)">📰</div>
+        <div>
+          <div class="insight-title">Newspaper Budget Should Be Reduced</div>
+          <div class="insight-body">Newspaper has the weakest correlation (r = 0.228), contributes only ~4% of feature importance, and is statistically not significant in the OLS regression (p = 0.86). High newspaper spend does not meaningfully drive sales.</div>
+          <div class="insight-rec">Recommendation: Cut Newspaper budget and reallocate funds to TV or Radio for higher returns.</div>
+        </div>
+      </div>
+
+      <div class="insight">
+        <div class="insight-icon" style="background:rgba(129,140,248,.1)">🚀</div>
+        <div>
+          <div class="insight-title">High TV Spend Yields Disproportionate Returns</div>
+          <div class="insight-body">Products in the "Very High TV" category (>$225K budget) average significantly higher sales with no visible diminishing returns in this dataset's range. Increasing TV spend from medium to high produces a clear step-change in sales.</div>
+          <div class="insight-rec">Recommendation: Do not cap TV budget prematurely — the data supports continued investment.</div>
+        </div>
+      </div>
+
+      <div class="insight">
+        <div class="insight-icon" style="background:rgba(244,114,182,.1)">💡</div>
+        <div>
+          <div class="insight-title">Combined TV + Radio Strategy is Optimal</div>
+          <div class="insight-body">The "High Budget" scenario with strong TV and Radio spend predicts the highest sales of all 6 scenarios tested. Running both channels simultaneously likely creates a combined audience-reach effect that outperforms either channel alone.</div>
+          <div class="insight-rec">Recommendation: Allocate the majority of budget to TV (~70%), supplement with Radio (~25%), and minimise Newspaper (~5%).</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════ FORECAST TABLE -->
+  <div class="section">
+    <div class="section-label">Forecasting</div>
+    <h2 class="section-title">Budget Scenario <span>Predictions</span></h2>
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table class="scenario-table">
+        <thead>
+          <tr>
+            <th>Scenario</th>
+            <th>TV ($K)</th>
+            <th>Radio ($K)</th>
+            <th>Newspaper ($K)</th>
+            <th>Total Budget</th>
+            <th>Predicted Sales (RF)</th>
+            <th>ROI</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="sc-name">Low Budget</span></td>
+            <td>50</td><td>10</td><td>5</td><td>$65K</td>
+            <td>~$10.2K</td>
+            <td><div class="roi-bar"><div class="roi-mini" style="width:25px"></div>0.157</div></td>
+          </tr>
+          <tr>
+            <td><span class="sc-name">Medium Budget</span></td>
+            <td>150</td><td>25</td><td>20</td><td>$195K</td>
+            <td>~$16.1K</td>
+            <td><div class="roi-bar"><div class="roi-mini" style="width:55px"></div>0.083</div></td>
+          </tr>
+          <tr>
+            <td><span class="sc-name" style="color:var(--accent3)">High Budget ★</span></td>
+            <td>250</td><td>40</td><td>30</td><td>$320K</td>
+            <td class="sc-hi">~$22.5K</td>
+            <td><div class="roi-bar"><div class="roi-mini" style="width:75px"></div>0.070</div></td>
+          </tr>
+          <tr>
+            <td><span class="sc-name">TV-Heavy</span></td>
+            <td>280</td><td>10</td><td>10</td><td>$300K</td>
+            <td>~$20.8K</td>
+            <td><div class="roi-bar"><div class="roi-mini" style="width:60px"></div>0.069</div></td>
+          </tr>
+          <tr>
+            <td><span class="sc-name">Radio-Heavy</span></td>
+            <td>50</td><td>45</td><td>10</td><td>$105K</td>
+            <td>~$13.4K</td>
+            <td><div class="roi-bar"><div class="roi-mini" style="width:80px"></div>0.128</div></td>
+          </tr>
+          <tr>
+            <td><span class="sc-name">Balanced</span></td>
+            <td>130</td><td>25</td><td>20</td><td>$175K</td>
+            <td>~$15.2K</td>
+            <td><div class="roi-bar"><div class="roi-mini" style="width:50px"></div>0.087</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════ LIBRARIES -->
+  <div class="section">
+    <div class="section-label">Stack</div>
+    <h2 class="section-title">Libraries <span>Used</span></h2>
+    <div class="libs-grid">
+      <div class="lib-chip"><div class="lib-dot" style="background:#3776AB"></div>pandas</div>
+      <div class="lib-chip"><div class="lib-dot" style="background:#4DABCF"></div>numpy</div>
+      <div class="lib-chip"><div class="lib-dot" style="background:#11557C"></div>matplotlib</div>
+      <div class="lib-chip"><div class="lib-dot" style="background:#4C72B0"></div>seaborn</div>
+      <div class="lib-chip"><div class="lib-dot" style="background:#F7931E"></div>scikit-learn</div>
+      <div class="lib-chip"><div class="lib-dot" style="background:#3C6E96"></div>statsmodels</div>
+      <div class="lib-chip"><div class="lib-dot" style="background:#F3771A"></div>Jupyter Notebook</div>
+      <div class="lib-chip"><div class="lib-dot" style="background:#FFD43B"></div>Python 3.x</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════ INSTALLATION -->
+  <div class="section">
+    <div class="section-label">Setup</div>
+    <h2 class="section-title">How to <span>Run</span> This Project</h2>
+    <div class="card">
+      <div style="font-size:14px; color:var(--muted); margin-bottom:12px;">
+        Follow these steps to run the notebook locally:
+      </div>
+      <div class="install-box">
+        <span class="cmt"># 1. Clone this repository</span><br>
+        <span class="prompt">$ </span><span class="cmd">git clone https://github.com/your-username/sales-prediction-python.git</span><br>
+        <span class="prompt">$ </span><span class="cmd">cd sales-prediction-python</span><br><br>
+        <span class="cmt"># 2. Install required libraries</span><br>
+        <span class="prompt">$ </span><span class="cmd">pip install pandas numpy matplotlib seaborn scikit-learn statsmodels</span><br><br>
+        <span class="cmt"># 3. Make sure Advertising.csv is in the same folder as the notebook</span><br><br>
+        <span class="cmt"># 4. Launch Jupyter</span><br>
+        <span class="prompt">$ </span><span class="cmd">jupyter notebook Sales_Prediction_Project.ipynb</span><br><br>
+        <span class="cmt"># 5. Run all cells: Kernel → Restart & Run All</span>
+      </div>
+      <div style="margin-top:16px; display:flex; flex-wrap:wrap; gap:12px;">
+        <div style="background:rgba(52,211,153,.08); border:1px solid rgba(52,211,153,.2); border-radius:8px; padding:10px 16px; font-size:13px; color:var(--accent3);">
+          ✅ No GPU required — runs on any laptop
+        </div>
+        <div style="background:rgba(56,189,248,.08); border:1px solid rgba(56,189,248,.2); border-radius:8px; padding:10px 16px; font-size:13px; color:var(--accent);">
+          ✅ Fully self-contained — all charts saved automatically
+        </div>
+        <div style="background:rgba(129,140,248,.08); border:1px solid rgba(129,140,248,.2); border-radius:8px; padding:10px 16px; font-size:13px; color:var(--accent2);">
+          ✅ Beginner friendly — every cell is commented
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════ METRICS SUMMARY -->
+  <div class="section">
+    <div class="section-label">Results</div>
+    <h2 class="section-title">Final <span>Performance</span> Summary</h2>
+    <div class="metrics-summary">
+      <div class="ms-card">
+        <div class="ms-val" style="color:var(--accent3)">0.98</div>
+        <div class="ms-lbl">Best R² Score (Random Forest)</div>
+      </div>
+      <div class="ms-card">
+        <div class="ms-val" style="color:var(--accent)">0.52</div>
+        <div class="ms-lbl">Lowest MAE ($K) — RF</div>
+      </div>
+      <div class="ms-card">
+        <div class="ms-val" style="color:var(--accent2)">0.72</div>
+        <div class="ms-lbl">Lowest RMSE ($K) — RF</div>
+      </div>
+      <div class="ms-card">
+        <div class="ms-val" style="color:var(--accent4)">0.86</div>
+        <div class="ms-lbl">Newspaper p-value (not significant)</div>
+      </div>
+      <div class="ms-card">
+        <div class="ms-val" style="color:var(--tv)">78%</div>
+        <div class="ms-lbl">TV Feature Importance</div>
+      </div>
+      <div class="ms-card">
+        <div class="ms-val" style="color:var(--radio)">18%</div>
+        <div class="ms-lbl">Radio Feature Importance</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════ FUTURE IMPROVEMENTS -->
+  <div class="section">
+    <div class="section-label">Next Steps</div>
+    <h2 class="section-title">Future <span>Improvements</span></h2>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:12px;">
+      <div class="card" style="border-color:rgba(56,189,248,.2);">
+        <div style="font-size:20px; margin-bottom:8px;">⏱️</div>
+        <div style="font-size:14px; font-weight:700; color:#fff; margin-bottom:4px;">Time-Series Forecasting</div>
+        <div style="font-size:13px; color:var(--muted);">Add date columns to model seasonal trends and weekly/monthly patterns using ARIMA or Prophet.</div>
+      </div>
+      <div class="card" style="border-color:rgba(52,211,153,.2);">
+        <div style="font-size:20px; margin-bottom:8px;">🧠</div>
+        <div style="font-size:14px; font-weight:700; color:#fff; margin-bottom:4px;">XGBoost / Gradient Boosting</div>
+        <div style="font-size:13px; color:var(--muted);">Try gradient boosting algorithms that often outperform Random Forest on structured tabular data.</div>
+      </div>
+      <div class="card" style="border-color:rgba(129,140,248,.2);">
+        <div style="font-size:20px; margin-bottom:8px;">👥</div>
+        <div style="font-size:14px; font-weight:700; color:#fff; margin-bottom:4px;">Customer Segmentation</div>
+        <div style="font-size:13px; color:var(--muted);">Add demographic or segment data to understand which customer groups respond most to each channel.</div>
+      </div>
+      <div class="card" style="border-color:rgba(251,146,60,.2);">
+        <div style="font-size:20px; margin-bottom:8px;">🏆</div>
+        <div style="font-size:14px; font-weight:700; color:#fff; margin-bottom:4px;">Competitor Data</div>
+        <div style="font-size:13px; color:var(--muted);">Include competitor advertising spend as a feature to model market saturation and relative effectiveness.</div>
+      </div>
+      <div class="card" style="border-color:rgba(244,114,182,.2);">
+        <div style="font-size:20px; margin-bottom:8px;">🧪</div>
+        <div style="font-size:14px; font-weight:700; color:#fff; margin-bottom:4px;">A/B Testing</div>
+        <div style="font-size:13px; color:var(--muted);">Validate the recommended budget allocations with real-world A/B experiments before full rollout.</div>
+      </div>
+      <div class="card" style="border-color:rgba(56,189,248,.2);">
+        <div style="font-size:20px; margin-bottom:8px;">🌐</div>
+        <div style="font-size:14px; font-weight:700; color:#fff; margin-bottom:4px;">Digital Channel Data</div>
+        <div style="font-size:13px; color:var(--muted);">Add social media, Google Ads, and email marketing spend to extend the model to modern digital channels.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ FOOTER -->
+<div class="footer">
+  <div style="font-family:'JetBrains Mono',monospace; font-size:12px; margin-bottom:8px; color:var(--accent)">
+    Sales_Prediction_Project.ipynb
+  </div>
+  <div>
+    Built with Python &nbsp;·&nbsp; scikit-learn &nbsp;·&nbsp; pandas &nbsp;·&nbsp; seaborn &nbsp;·&nbsp; statsmodels
+  </div>
+  <div style="margin-top:6px; font-size:12px;">
+    University Project &nbsp;·&nbsp; Machine Learning &amp; Predictive Analytics
+  </div>
+</div>
+
+</body>
+</html>
